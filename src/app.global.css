@@ -1,0 +1,417 @@
+.wrapper {
+	display: flex;
+	flex-direction: row;
+	justify-content:flex-start;
+}
+
+.main-wrapper {
+	position: absolute;
+	width: 1024px;
+	height: 850px;
+}
+
+.main {
+	width: 1024px;
+	height: 850px;
+	position: absolute;
+	background-color: #6bc9f7;
+}
+
+.header {
+	width: 1024px;
+	position: absolute;
+	height: 105px;
+}
+
+.language-button {
+	position: absolute;
+	color: white;
+	font-weight: 600;
+	padding: 25px;
+	border: none;
+	border-radius: 8%;
+	background-color: #6bc9f7;
+	box-shadow:  -5px 5px 5px -5px grey;
+	transform: translate(880px, 65px);
+}
+
+.product-container {
+	height: 570px;
+	width: 510px;
+	transform: translate(50px, 150px);
+	border-radius: 5%;
+}
+
+.nav-item {
+	color: grey !important;
+	font-size: small;
+}
+
+.tab-container {
+	width: 510px;
+	height: 570px;
+	background: white;
+	border-bottom-left-radius: 15px;
+	border-bottom-right-radius: 15px;
+	position: absolute;
+	padding: 5%;
+	justify-items: center;
+}
+
+.product-card {
+	height: 100px;
+	width: 130px;
+	border-radius: 5%;
+	border: 1.5px solid gainsboro;
+	padding: 2%;
+	display: table-column;
+	margin: 2.3%;
+	box-shadow: -4px 4px 4px gainsboro;
+	cursor: pointer;
+}
+
+.product-name {
+	font-size: small;
+	align-self: center;
+	text-align: center;
+	justify-self: center;
+	padding: 8px;
+}
+
+#product-img {
+	align-self: center;
+	text-align: center;
+	height: 55px;
+}
+
+.cart-container {
+	width: 384px;
+	transform: translate(600px, -385px);
+}
+
+.cart-header {
+	background: white;
+	width: 384px;
+	height: 36px;
+	display: flex;
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+	font-size: small;
+	color: grey;
+	margin-bottom: 2px;
+}
+
+.cart-quantity{
+	margin-top: 8px;
+	margin-left: 15px;
+}
+
+.cart-item {
+	margin-top: 8px;
+	margin-left: 50px;
+}
+
+.cart-amount {
+	margin-top: 8px;
+	margin-left: 185px;
+}
+
+.cart-content {
+	height: 360px;
+	margin-bottom: 2px;
+	background-color: white;
+}
+
+.cart-footer {
+	height: 36px;
+	background-color: white;
+	font-size: small;
+	color: grey;
+}
+
+.total-amount {
+	position: absolute;
+	margin-top: 5px;
+	margin-left: 250px;
+	font-size: medium;
+}
+
+.cart-added-items {
+	position: absolute;
+	padding: 15px;
+}
+
+.cart-item-fields {
+	color: grey;
+	font-size: 15px;
+	display: flex;
+}
+
+#cart-item-name {
+	position: absolute;
+	margin-left: 70px;
+	width: 200px;
+}
+
+#cart-item-price {
+	position: absolute;
+	margin-left: 290px;
+	text-align: right;
+	width: 50px;
+}
+
+#total-price {
+	position: absolute;
+	transform: translate(60px, -24px);
+	font-size: medium;
+}
+
+.action-button-wrapper {
+	position: absolute;
+	padding-top: 30px;
+	margin: 15px;
+	width: 384px;
+	display: flex;
+}
+
+.action-button {
+	width: 100px;
+	height: 70px;
+	border-radius: 10%;
+	border: 1.5px solid gainsboro;
+	margin: 8px;
+	font-size: 14px;
+}
+
+.payment-wrapper {
+	height: 600px;
+	align-self: center;
+}
+
+.payment-bg {
+	width: 1024px;
+	height: 600px;
+	display: flex;
+	flex-direction: row;
+	position: absolute;
+}
+
+.pay-content {
+	position: absolute;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+}
+
+.pay-left {
+	width: 440px;
+	height: 600px;
+	background-color: #39b54a;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	
+}
+
+.pay-amount {
+	height: 150px;
+	width: 300px;
+	background-color: white;
+	align-self: center;
+	align-items: center;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	text-align: right;
+
+}
+
+.payment-footer{
+	width: 327px;
+	height: 133px;
+	align-self: flex-end;
+}
+
+.payment-footer-text {
+	position: absolute;
+	width: 150px;
+	text-align: center;
+	transform: translate(200px, 190px);
+}
+
+.paid-img {
+	position: absolute;
+	opacity: 0.8;
+	transform: translate(110px, -87px);
+}
+
+.paid-change-container{
+	position: absolute;
+	transform: translate(0px, 120px);
+	background-color: red;
+	opacity: 0.5;
+	width: 300px;
+	height: 50px;
+	align-self: center;
+	align-items: center;
+}
+
+#paid-change-text {
+	position: absolute;
+	transform: translate(150px, 125px);
+	font-weight: 600;
+	color: white;
+	font-size: large;
+	text-align: center;
+}
+
+#paid-change-amount {
+	position: absolute;
+	transform: translate(290px, 125px);
+	font-weight: 600;
+	color: white;
+	font-size: large;
+	text-align: center;
+}
+
+.pay-amount-left {
+	font-weight: 600;
+	color: #39b54a;
+}
+
+.pay-amount-right {
+	font-weight: 600;
+}
+
+.pay-right {
+	height: 600px;
+	width: 584px;
+	flex: 1;
+	display: flex;
+	flex-direction: row;
+	padding: 20px;
+	background-color: #d8d6ec;
+}
+
+.pay-cash {
+	height: 100%;
+	width: 360px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+	cursor: pointer;
+}
+
+.pay-coins {
+	height: 100%;
+	width: 150px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+	cursor: pointer;
+}
+
+.receipt-bg {
+	position: absolute;
+	background-color: black;
+	width: 100%;
+	height: 100%;
+	opacity: 0.2;
+	top:0px;
+}
+
+.receipt-container {
+	position: absolute;
+	top: 50px;
+	width: 100%;
+	height: 100%;
+    padding: 30px;
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+}
+
+#receipt-header {
+	position: absolute;
+	transform: translate(0px, 100px);
+	font-size: medium;
+	font-weight: 650;
+	color: #39b54a;
+	align-self: center;
+	text-align: center;
+}
+
+.receipt-done {
+	position: absolute;
+	transform: translate(0px, 620px);
+	width: 100px;
+	height: 70px;
+	padding: 10px;
+	border: 1.5px solid gainsboro;
+	border-radius: 8%;
+	background-color: #39b54a;
+	color: white;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.receipt-added-item {
+	margin-left: 50px;
+	margin-bottom: -5px;
+}
+
+.receipt-items {
+	position: absolute;
+	padding: 15px;
+	margin-top: 120px;
+	width: 400px;
+	height: 410px;
+	overflow-y: scroll;
+	scroll-behavior: smooth;
+}
+
+.receipt-item-fields {
+	color: grey;
+	font-size: 15px;
+	display: flex;
+}
+
+
+#receipt-item-name {
+	position: absolute;
+	margin-left: 30px;
+}
+
+#receipt-item-price {
+	position: absolute;
+	margin-left: 205px;
+}
+
+.receipt-total {
+	position: absolute;
+	color: grey;
+	font-size: medium;
+	transform: translate(-140px, 540px);
+	font-weight: 600;
+}
+
+.receipt-total-amount {
+	position: absolute;
+	text-align: right;
+	color: grey;
+	transform: translate(140px, 540px);
+	font-weight: 600;
+}
+
+#receipt-waiting {
+	position: absolute;
+	font-size: x-large;
+	font-weight: 650;
+	transform: translate(0px, 570px);
+	color:#23ba0d;
+}
+
+
+
