@@ -16,18 +16,22 @@ import {
 	addPaymentItem,
 	showPayment,
 	donePayment,
+	resetPayment,
 } from "../redux/slices/payment";
+import axios, { all } from "axios";
+import { API_KEY, CMS_URL } from "../utils/constants";
 
-export default function PaymentPage(props) {
-	const { cartItems, quantity, totalAmount, checkout } = useSelector(
+export default function PaymentPage() {
+	const { cartItems, quantity, totalAmount, checkout, locale } = useSelector(
 		(state) => state.cart
 	);
 	const { show, paid, completed } = useSelector((state) => state.payment);
+
 	const [remainder, setRemainder] = useState(0);
 	const [change, setChange] = useState(0);
 	const [done, setDone] = useState(false);
-
 	const dispatch = useDispatch();
+	const [paymentText, setPaymentText] = useState([]);
 
 	const bills = [
 		{ value: 1, image: One },
@@ -48,6 +52,35 @@ export default function PaymentPage(props) {
 	};
 
 	useEffect(() => {
+		const fetchPaymentText = async () => {
+			try {
+				await axios
+					.get(
+						`${CMS_URL}/api/payment-texts?[locale][$eq]=${locale}&populate=*`,
+						{
+							headers: {
+								Authorization: `Bearer ${API_KEY}`,
+								"Content-Type": "application/json",
+							},
+						}
+					)
+					.then((response) => {
+						console.log(response);
+						setPaymentText(response.data.data);
+						if (localStorage.getItem('paymentText')) localStorage.removeItem('paymentText')
+						localStorage.setItem('paymentText', JSON.stringify(response.data.data))
+					});
+			} catch (err) {
+				console.log(err.message);
+				let cachedData = JSON.parse(localStorage.getItem('paymentText'))
+				setPaymentText(cachedData)
+			}
+		};
+
+		fetchPaymentText();
+	}, [locale]);
+
+	useEffect(() => {
 		let temp = totalAmount - paid;
 		if (temp >= 0) {
 			setRemainder((remainder) => temp);
@@ -65,86 +98,117 @@ export default function PaymentPage(props) {
 		}
 	}, [paid, totalAmount, completed, change]);
 
+	useEffect(() => {
+		console.log(cartItems.length);
+		if (cartItems.length == 0) {
+			dispatch(resetPayment());
+			dispatch(showPayment(false));
+		}
+	}, [cartItems]);
+
 	return (
 		<div className="payment-wrapper">
 			<div className="payment-bg">
 				<img src={PayBG} id="paybg-img" />
 			</div>
-			<div
-				className="pay-content"
-				style={{ display: checkout ? "flex" : "none" }}
-			>
-				<div className="pay-left">
-					<img src={PayHeader} id="payheader-img" />
-					<div className="pay-amount">
-						<div className="pay-amount-left">
-							<p id="pay-amount-total">Total: </p>
-							<p id="pay-amount-paid">Amount Paid: </p>
-							<p id="pay-amount-to-go">Amount to go: </p>
-	
+			{show && (
+				<div
+					className="pay-content"
+					style={{ display: checkout ? "flex" : "none" }}
+				>
+					<div className="pay-left">
+						<img src={PayHeader} id="payheader-img" />
+						<div className="pay-amount">
+							<div className="pay-amount-left">
+								<p id="pay-amount-total">Total: </p>
+								<p id="pay-amount-paid">
+									{paymentText[0]
+										? paymentText[0].attributes.Name + ":"
+										: "Amount Paid:"}{" "}
+								</p>
+								<p id="pay-amount-to-go">
+									{paymentText[1]
+										? paymentText[1].attributes.Name + ":"
+										: "Amount to go:"}{" "}
+								</p>
+							</div>
+							<div className="pay-amount-right">
+								<p id="pay-amount-total">{`$${parseFloat(totalAmount).toFixed(
+									2
+								)}`}</p>
+								<p id="pay-amount-paid">{`$${parseFloat(paid).toFixed(2)}`}</p>
+								<p id="pay-amount-to-go">{`$${parseFloat(remainder).toFixed(
+									2
+								)}`}</p>
+							</div>
 						</div>
-						<div className="pay-amount-right">
-							<p id="pay-amount-total">{`$${parseFloat(totalAmount).toFixed(
-								2
-							)}`}</p>
-							<p id="pay-amount-paid">{`$${parseFloat(paid).toFixed(2)}`}</p>
-							<p id="pay-amount-to-go">{`$${parseFloat(remainder).toFixed(
-								2
-							)}`}</p>
+
+						<div
+							className="payment-footer"
+							style={{ opacity: !completed ? 1 : 0 }}
+						>
+							<img src={PayFooter} id="payfooter-img" />
+						</div>
+						<div
+							className="payment-footer-text"
+							style={{ opacity: !completed ? 1 : 0 }}
+						>
+							<h6>
+								{paymentText[2]
+									? paymentText[2].attributes.Name
+									: "TOUCH BILLS AND COINS TO PAY:"}{" "}
+							</h6>
+						</div>
+
+						<div
+							className="paid-img"
+							style={{ display: completed ? "block" : "none" }}
+						>
+							<img src={PayImage} id="paid-image" />
+						</div>
+						<div
+							className="paid-change-container"
+							style={{ display: completed ? "block" : "none" }}
+						></div>
+						<p
+							id="paid-change-text"
+							style={{ display: completed ? "block" : "none" }}
+						>
+							{paymentText[3]
+								? paymentText[3].attributes.Name + ":"
+								: "Change:"}
+						</p>
+						<p
+							id="paid-change-amount"
+							style={{ display: completed ? "block" : "none" }}
+						>{`$${parseFloat(change).toFixed(2)}`}</p>
+					</div>
+					<div className="pay-right">
+						<div className="pay-cash">
+							{bills.map((bill) => {
+								return (
+									<img
+										key={bill.value}
+										src={bill.image}
+										onClick={() => handlePay(bill)}
+									/>
+								);
+							})}
+						</div>
+						<div className="pay-coins">
+							{coins.map((coin) => {
+								return (
+									<img
+										key={coin.value}
+										src={coin.image}
+										onClick={() => handlePay(coin)}
+									/>
+								);
+							})}
 						</div>
 					</div>
-
-					<div
-						className="payment-footer"
-						style={{ opacity: !completed ? 1 : 0 }}
-					>
-						<img src={PayFooter} id="payfooter-img" />
-					</div>
-					<div
-						className="payment-footer-text"
-						style={{ opacity: !completed ? 1 : 0 }}
-					>
-						<h6> TOUCH BILLS AND COINS TO PAY </h6>
-					</div>
-
-					<div
-						className="paid-img"
-						style={{ display: completed ? "block" : "none" }}
-					>
-						<img src={PayImage} id="paid-image" />
-					</div>
-					<div
-						className="paid-change-container"
-						style={{ display: completed ? "block" : "none" }}
-					></div>
-					<p id="paid-change-text" style={{ display: completed ? "block" : "none" }}>Change:</p>
-					<p id="paid-change-amount" style={{ display: completed ? "block" : "none" }}>{`$${parseFloat(change).toFixed(2)}`}</p>
 				</div>
-				<div className="pay-right">
-					<div className="pay-cash">
-						{bills.map((bill) => {
-							return (
-								<img
-									key={bill.value}
-									src={bill.image}
-									onClick={() => handlePay(bill)}
-								/>
-							);
-						})}
-					</div>
-					<div className="pay-coins">
-						{coins.map((coin) => {
-							return (
-								<img
-									key={coin.value}
-									src={coin.image}
-									onClick={() => handlePay(coin)}
-								/>
-							);
-						})}
-					</div>
-				</div>
-			</div>
+			)}
 		</div>
 	);
 }

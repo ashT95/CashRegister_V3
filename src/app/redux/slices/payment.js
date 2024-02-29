@@ -9,7 +9,7 @@ const paymentSlice = createSlice({
 	},
 	reducers: {
 		showPayment: (state, { payload }) => {
-			state.show = true;
+			state.show = payload;
 		},
 		addPaymentItem: (state, { payload }) => {
 			if (!state.completed) {
@@ -17,9 +17,8 @@ const paymentSlice = createSlice({
 			}
 		},
 		resetPayment: (state, { payload }) => {
-			state.show = false;
             state.paid = 0;
-            state.completed = false;
+			state.completed = false;
 		},
         donePayment: (state, { payload  }) => {
             state.completed = true;

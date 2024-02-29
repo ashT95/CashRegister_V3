@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { LOCALE_EN, LOCALE_ES } from "../../utils/constants";
 
 const cartSlice = createSlice({
 	name: "cart",
@@ -7,6 +8,7 @@ const cartSlice = createSlice({
 		cartItems: [],
 		totalAmount: 0,
 		checkout: false,
+		locale: LOCALE_EN,
 	},
 	reducers: {
 		addToCart: (state, { payload }) => {
@@ -77,9 +79,14 @@ const cartSlice = createSlice({
 		clearAllItems: (state, { payload }) => {
 			state.cartItems = []
 			state.totalAmount = 0
+			state.checkout = false
+			state.quantity = 0
 		},
 		setCheckout: (state, { payload }) => {
 			state.checkout = payload
+		},
+		setLocale: (state, {payload}) => {
+			state.locale = payload
 		}
 	},
 });
@@ -91,7 +98,8 @@ export const {
 	subtractItemQuantity,
 	removeLast,
 	clearAllItems,
-	setCheckout
+	setCheckout,
+	setLocale
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
