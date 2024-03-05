@@ -4,14 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearAllItems, setCheckout } from "../redux/slices/cart";
 import { resetPayment, showPayment } from "../redux/slices/payment";
 import ReceiptItem from "../components/receiptItem";
-import axios, { all } from "axios";
-import { API_KEY, CMS_URL } from "../utils/constants";
 
-export default function ReceiptContainer() {
+export default function ReceiptContainer(props) {
+	const { receiptText } = props;
 	const { cartItems, quantity, totalAmount, checkout, locale } = useSelector(
 		(state) => state.cart
 	);
-	const [receiptText, setReceiptText] = useState([]);
 
 	const { show, paid, completed } = useSelector((state) => state.payment);
 	const dispatch = useDispatch();
@@ -25,45 +23,17 @@ export default function ReceiptContainer() {
 	const handleCancel = () => {
 		dispatch(setCheckout(false));
 		dispatch(resetPayment());
-		dispatch(showPayment(false))
-	}
-
-	useEffect(() => {
-		const fetchReceiptText = async () => {
-			try {
-				await axios
-					.get(
-						`${CMS_URL}/api/receipt-texts?[locale][$eq]=${locale}&populate=*`,
-						{
-							headers: {
-								Authorization: `Bearer ${API_KEY}`,
-								"Content-Type": "application/json",
-							},
-						}
-					)
-					.then((response) => {
-						console.log(response);
-						setReceiptText(response.data.data);
-						if (localStorage.getItem('receiptText')) localStorage.removeItem('receiptText')
-						localStorage.setItem('receiptText', JSON.stringify(response.data.data))
-					});
-			} catch (err) {
-				console.log(err.message);
-				let cachedData = JSON.parse(localStorage.getItem('receiptText'))
-				setReceiptText(cachedData)
-			}
-		};
-
-		fetchReceiptText();
-	}, [locale]);
+		dispatch(showPayment(false));
+	};
 
 	return (
 		<div>
 			{checkout && (
 				<div>
 					<div className="receipt-bg"></div>
+
 					<div className="receipt-container">
-						<img src={receiptImg} className="receipt-img" alt="receipt-img" />
+						<img key="receipt-img" src={receiptImg} className="receipt-img" />
 						<p id="receipt-header">
 							{receiptText[0] ? receiptText[0].attributes.Name : "RECEIPT"}
 						</p>

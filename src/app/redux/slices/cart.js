@@ -8,7 +8,7 @@ const cartSlice = createSlice({
 		cartItems: [],
 		totalAmount: 0,
 		checkout: false,
-		locale: LOCALE_EN,
+		locale: 'all',
 	},
 	reducers: {
 		addToCart: (state, { payload }) => {

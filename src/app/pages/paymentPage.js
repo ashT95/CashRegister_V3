@@ -19,7 +19,8 @@ import {
 	resetPayment,
 } from "../redux/slices/payment";
 import axios, { all } from "axios";
-import { API_KEY, CMS_URL } from "../utils/constants";
+import { API_KEY, CMS_URL, LOCALE_EN } from "../utils/constants";
+import {useQuery } from '@tanstack/react-query';
 
 export default function PaymentPage() {
 	const { cartItems, quantity, totalAmount, checkout, locale } = useSelector(
@@ -31,7 +32,6 @@ export default function PaymentPage() {
 	const [change, setChange] = useState(0);
 	const [done, setDone] = useState(false);
 	const dispatch = useDispatch();
-	const [paymentText, setPaymentText] = useState([]);
 
 	const bills = [
 		{ value: 1, image: One },
@@ -51,34 +51,23 @@ export default function PaymentPage() {
 		dispatch(addPaymentItem(value));
 	};
 
-	useEffect(() => {
-		const fetchPaymentText = async () => {
-			try {
-				await axios
-					.get(
-						`${CMS_URL}/api/payment-texts?[locale][$eq]=${locale}&populate=*`,
-						{
-							headers: {
-								Authorization: `Bearer ${API_KEY}`,
-								"Content-Type": "application/json",
-							},
-						}
-					)
-					.then((response) => {
-						console.log(response);
-						setPaymentText(response.data.data);
-						if (localStorage.getItem('paymentText')) localStorage.removeItem('paymentText')
-						localStorage.setItem('paymentText', JSON.stringify(response.data.data))
-					});
-			} catch (err) {
-				console.log(err.message);
-				let cachedData = JSON.parse(localStorage.getItem('paymentText'))
-				setPaymentText(cachedData)
+	const fetchPaymentText = async (locale) => {
+		const response = await axios.get(
+			`${CMS_URL}/api/payment-texts?[locale][$eq]=${locale}&populate=*`,
+			{
+				headers: {
+					Authorization: `Bearer ${API_KEY}`,
+					"Content-Type": "application/json",
+				},
 			}
-		};
-
-		fetchPaymentText();
-	}, [locale]);
+		);
+		return response.data.data;
+	};
+	
+	const { data: paymentText } = useQuery({
+		queryKey: ["paymentText", locale], 
+		queryFn: () => fetchPaymentText(locale),
+});
 
 	useEffect(() => {
 		let temp = totalAmount - paid;
@@ -171,7 +160,7 @@ export default function PaymentPage() {
 							style={{ display: completed ? "block" : "none" }}
 						></div>
 						<p
-							id="paid-change-text"
+							id={locale == LOCALE_EN ? "paid-change-text-1" : "paid-change-text-2"}
 							style={{ display: completed ? "block" : "none" }}
 						>
 							{paymentText[3]
