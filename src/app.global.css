@@ -39,8 +39,8 @@
 
 .product-container {
 	height: 570px;
-	width: 510px;
-	transform: translate(50px, 150px);
+	width: 530px;
+	transform: translate(40px, 150px);
 	border-radius: 5%;
 }
 
@@ -50,7 +50,7 @@
 }
 
 .tab-container {
-	width: 510px;
+	width: 530px;
 	height: 500px;
 	background: white;
 	border-bottom-left-radius: 15px;
@@ -58,6 +58,71 @@
 	position: absolute;
 	padding: 5%;
 	justify-items: center;
+	box-shadow:  -5px 5px 5px -5px grey;
+	color: grey;
+}
+
+.tabHead-0 {
+	color: #cc9b0a !important;
+	background: #fffac0 !important;
+	font-weight: 600 !important;
+	font-size: 14px !important;
+}
+
+.tabHead-1 {
+	background: #ffead0 !important;
+	color: #ff3301 !important;
+	font-weight: 600 !important;
+	font-size: 14px !important;
+}
+
+.tabHead-2 {
+	background: #fce3ee !important;
+	color: #fe126f !important;
+	font-weight: 600 !important;
+	font-size: 14px !important;
+}
+
+.tabHead-3 {
+	background: #f1f9d7 !important;
+    color: #36ce3b !important;
+	font-weight: 600 !important;
+	font-size: 14px !important;
+}
+
+.tabHead-4 {
+	background: #dff2f7 !important;
+	color: #1972cf !important;
+	font-weight: 600 !important;
+	font-size: 14px !important;
+}
+
+.tabHead-5 {
+	background: #d8d6ec !important;
+	color: #99069d !important;
+	font-weight: 600 !important;
+	font-size: 14px !important;
+}
+
+.tabHead-6 {
+	color: #cc9b0a !important;
+	background: #fffac0 !important;
+	font-weight: 600 !important;
+	font-size: 14px !important;
+}
+
+.tabHead-7 {
+	background: #ffead0 !important;
+	color: #ff3301 !important;
+	font-weight: 600 !important;
+	font-size: 14px !important;
+}
+
+.tabHead-8 {
+	background: #fce3ee !important;
+	color: #fe126f !important;
+	font-weight: 600 !important;
+	font-size: 14px !important;
 }
 
 .product-card {
@@ -70,6 +135,7 @@
 	margin: 2.3%;
 	box-shadow: -4px 4px 4px gainsboro;
 	cursor: pointer;
+	background-color: white;
 }
 
 .product-name {
@@ -78,6 +144,8 @@
 	text-align: center;
 	justify-self: center;
 	padding: 8px;
+	color: #f06;
+	font-weight: 600;
 }
 
 #product-img {
@@ -99,8 +167,9 @@
 	border-top-right-radius: 5px;
 	border-top-left-radius: 5px;
 	font-size: small;
-	color: grey;
+	color: #23ba0d;
 	margin-bottom: 2px;
+	font-weight: 600;
 }
 
 .cart-quantity{
@@ -134,13 +203,21 @@
 	font-size: small;
 	color: grey;
 	transform: translate(0px, 362px);
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
 }
 
 .total-amount {
 	position: absolute;
-	margin-top: 5px;
+	margin-top: 6px;
 	margin-left: 250px;
-	font-size: medium;
+	font-size: 15px;
+	color: #23ba0d;
+	font-weight: 600;
+}
+
+#total-price {
+	color: grey;
 }
 
 .cart-added-items {
@@ -186,9 +263,13 @@
 	width: 100px;
 	height: 70px;
 	border-radius: 10%;
-	border: 1.5px solid gainsboro;
+	border: 1.5px solid #93278f;
 	margin: 8px;
-	font-size: 14px;
+	font-size: 13px;
+	color: white;
+	font-weight: 630;
+	background-color: #93278f;
+	box-shadow: -2px 2px 2px grey;
 }
 
 .payment-wrapper {
@@ -372,6 +453,7 @@
 	color: white;
 	font-size: 16px;
 	font-weight: 600;
+	box-shadow: -2px 2px 2px gainsboro;
 }
 
 .receipt-cancel {
@@ -386,6 +468,7 @@
 	color: white;
 	font-size: 16px;
 	font-weight: 600;
+	box-shadow: -2px 2px 2px gainsboro;
 }
 
 

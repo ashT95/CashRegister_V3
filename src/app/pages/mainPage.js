@@ -86,8 +86,8 @@ export default function MainPage(props) {
 	const { data: receiptText } = useQuery({
 		queryKey: ["receiptText", locale],
 		queryFn: () => fetchReceiptText(locale),
-		staleTime: 5000,
-		cacheTime: Infinity,
+		staleTime:  onlineManager.isOnline ? 5000 : Infinity,
+		cacheTime: onlineManager.isOnline ? 5000 : Infinity,
 		initialData: () => {
 			const cachedData = queryClient.getQueryData(['receiptText'])
 			if (cachedData) {
@@ -99,8 +99,8 @@ export default function MainPage(props) {
 	const { data: cartText } = useQuery({
 		queryKey: ["cartText", locale],
 		queryFn: () => fetchCartText(locale),
-		staleTime: 5000,
-		cacheTime: Infinity,
+		staleTime:  onlineManager.isOnline ? 5000 : Infinity,
+		cacheTime: onlineManager.isOnline ? 5000 : Infinity,
 		initialData: () => {
 			const cachedData = queryClient.getQueryData(['cartText'])
 			if (cachedData) {
@@ -112,8 +112,8 @@ export default function MainPage(props) {
 	const { data: products } = useQuery({
 		queryKey: ["products", locale],
 		queryFn: () => fetchProducts(locale),
-		staleTime: 5000,
-		cacheTime:  Infinity,
+		staleTime: onlineManager.isOnline ? 5000 : Infinity,
+		cacheTime:  onlineManager.isOnline ? 5000 : Infinity,
 		initialData: () => {
 			const cachedData = queryClient.getQueryData(['products'])
 			if (cachedData) {
@@ -125,8 +125,8 @@ export default function MainPage(props) {
 	const { data: categories } = useQuery({
 		queryKey: ["categories", locale],
 		queryFn: () => fetchCategories(locale),
-		staleTime: 5000,
-		cacheTime: Infinity,
+		staleTime:  onlineManager.isOnline ? 5000 : Infinity,
+		cacheTime: onlineManager.isOnline ? 5000 : Infinity,
 		initialData: () => {
 			const cachedData = queryClient.getQueryData(['categories'])
 			if (cachedData) {
@@ -135,6 +135,7 @@ export default function MainPage(props) {
 		}
 	});
 
+console.log(products)
 
 	return (
 		<div className="main-wrapper">

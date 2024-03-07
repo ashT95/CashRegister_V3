@@ -22,6 +22,7 @@ export default function ReceiptContainer(props) {
 
 	const handleCancel = () => {
 		dispatch(setCheckout(false));
+		dispatch(clearAllItems());
 		dispatch(resetPayment());
 		dispatch(showPayment(false));
 	};
