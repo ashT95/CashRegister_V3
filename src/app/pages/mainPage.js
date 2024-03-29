@@ -13,6 +13,7 @@ export default function MainPage(props) {
 	const { queryClient } = props;
 	const [lang, setLang] = useState(LOCALE_EN);
 	const [buttonText, setButtonText] = useState("Español");
+	const [refresh, setRefresh] = useState(false);
 
 	const { locale } = useSelector((state) => state.cart);
 
@@ -29,6 +30,19 @@ export default function MainPage(props) {
 		dispatch(setLocale(lang));
 	}, [lang, buttonText]);
 
+	const fetchAll = async () => {
+		const response = await axios.get(
+			`${CMS_URL}/api/products?locale=all&populate=*`,
+			{
+				headers: {
+					Authorization: `Bearer ${API_KEY}`,
+					"Content-Type": "application/json",
+				},
+			}
+		);
+		return response;
+	};
+
 	const fetchProducts = async (locale) => {
 		const response = await axios.get(
 			`${CMS_URL}/api/products?[locale][$eq]=${locale}&populate=*`,
@@ -39,7 +53,6 @@ export default function MainPage(props) {
 				},
 			}
 		);
-		//localStorage.setItem('products', JSON.stringify(response.data.data))
 		return response.data.data;
 	};
 
@@ -66,7 +79,7 @@ export default function MainPage(props) {
 				},
 			}
 		);
-		
+
 		return response.data.data;
 	};
 
@@ -86,56 +99,70 @@ export default function MainPage(props) {
 	const { data: receiptText } = useQuery({
 		queryKey: ["receiptText", locale],
 		queryFn: () => fetchReceiptText(locale),
-		staleTime:  onlineManager.isOnline ? 5000 : Infinity,
-		cacheTime: onlineManager.isOnline ? 5000 : Infinity,
+		staleTime: onlineManager.isOnline ? 1000 : Infinity,
+		cacheTime: onlineManager.isOnline ? 1000 : Infinity,
+
 		initialData: () => {
-			const cachedData = queryClient.getQueryData(['receiptText'])
+			const cachedData = queryClient.getQueryData(["receiptText"]);
 			if (cachedData) {
-				return cachedData
-			} 
-		}
+				return cachedData;
+			}
+		},
 	});
 
 	const { data: cartText } = useQuery({
 		queryKey: ["cartText", locale],
 		queryFn: () => fetchCartText(locale),
-		staleTime:  onlineManager.isOnline ? 5000 : Infinity,
-		cacheTime: onlineManager.isOnline ? 5000 : Infinity,
+		staleTime: onlineManager.isOnline ? 1000 : Infinity,
+		cacheTime: onlineManager.isOnline ? 1000 : Infinity,
 		initialData: () => {
-			const cachedData = queryClient.getQueryData(['cartText'])
+			const cachedData = queryClient.getQueryData(["cartText"]);
 			if (cachedData) {
-				return cachedData
-			} 
-		}
+				return cachedData;
+			}
+		},
 	});
 
 	const { data: products } = useQuery({
 		queryKey: ["products", locale],
 		queryFn: () => fetchProducts(locale),
-		staleTime: onlineManager.isOnline ? 5000 : Infinity,
-		cacheTime:  onlineManager.isOnline ? 5000 : Infinity,
+		staleTime: onlineManager.isOnline ? 1000 : Infinity,
+		cacheTime: onlineManager.isOnline ? 1000 : Infinity,
 		initialData: () => {
-			const cachedData = queryClient.getQueryData(['products'])
+			const cachedData = queryClient.getQueryData(["products"]);
 			if (cachedData) {
-				return cachedData
-			} 
-		}
+				return cachedData;
+			}
+		},
 	});
 
 	const { data: categories } = useQuery({
 		queryKey: ["categories", locale],
 		queryFn: () => fetchCategories(locale),
-		staleTime:  onlineManager.isOnline ? 5000 : Infinity,
-		cacheTime: onlineManager.isOnline ? 5000 : Infinity,
+		staleTime: onlineManager.isOnline ? 1000 : Infinity,
+		cacheTime: onlineManager.isOnline ? 1000 : Infinity,
 		initialData: () => {
-			const cachedData = queryClient.getQueryData(['categories'])
+			const cachedData = queryClient.getQueryData(["categories"]);
 			if (cachedData) {
-				return cachedData
-			} 
-		}
+				return cachedData;
+			}
+		},
 	});
 
-console.log(products)
+	const { data: everything } = useQuery({
+		queryKey: ["everything"],
+		queryFn: () => fetchAll(),
+		staleTime: onlineManager.isOnline ? 1000 : Infinity,
+		cacheTime: onlineManager.isOnline ? 1000 : Infinity,
+		initialData: () => {
+			const cachedData = queryClient.getQueryData(["everything"]);
+			if (cachedData) {
+				return cachedData;
+			}
+		},
+	});
+
+	console.log(everything)
 
 	return (
 		<div className="main-wrapper">
