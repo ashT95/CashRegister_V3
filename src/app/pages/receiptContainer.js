@@ -32,11 +32,10 @@ export default function ReceiptContainer(props) {
 			{checkout && (
 				<div>
 					<div className="receipt-bg"></div>
-
 					<div className="receipt-container">
 						<img key="receipt-img" src={receiptImg} className="receipt-img" />
 						<p id="receipt-header">
-							{receiptText[0] ? receiptText[0].attributes.Name : "RECEIPT"}
+							{receiptText[0] ? locale == 'en' ? receiptText[0].attributes.Name : receiptText[0].attributes.localizations.data[0].attributes.Name : "RECEIPT"}
 						</p>
 						<div className="receipt-items">
 							{cartItems.map((item) => {
@@ -50,20 +49,20 @@ export default function ReceiptContainer(props) {
 						{!completed && (
 							<p id="receipt-waiting">
 								{receiptText[1]
-									? receiptText[1].attributes.Name
+									? locale == 'en' ? receiptText[1].attributes.Name : receiptText[1].attributes.localizations.data[0].attributes.Name
 									: "Waiting for payment"}
 							</p>
 						)}
 						{completed && (
 							<p id="receipt-waiting">
 								{receiptText[2]
-									? receiptText[2].attributes.Name
+									? locale == 'en' ? receiptText[2].attributes.Name : receiptText[2].attributes.localizations.data[0].attributes.Name
 									: "Thank you! Come again!"}
 							</p>
 						)}
 						{completed && (
 							<button className="receipt-done" onClick={() => handleCheckout()}>
-								{receiptText[3] ? receiptText[3].attributes.Name : "DONE"}
+								{receiptText[3] ? locale == 'en' ? receiptText[3].attributes.Name : receiptText[3].attributes.localizations.data[0].attributes.Name : "DONE"}
 							</button>
 						)}
 						{!completed && (

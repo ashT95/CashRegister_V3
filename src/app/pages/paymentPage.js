@@ -30,7 +30,7 @@ export default function PaymentPage() {
 
 	const [remainder, setRemainder] = useState(0);
 	const [change, setChange] = useState(0);
-	const [done, setDone] = useState(false);
+	const [paymentText, setPaymentText] = useState()
 	const dispatch = useDispatch();
 
 	const bills = [
@@ -51,23 +51,27 @@ export default function PaymentPage() {
 		dispatch(addPaymentItem(value));
 	};
 
-	const fetchPaymentText = async (locale) => {
-		const response = await axios.get(
-			`${CMS_URL}/api/payment-texts?[locale][$eq]=${locale}&populate=*`,
-			{
-				headers: {
-					Authorization: `Bearer ${API_KEY}`,
-					"Content-Type": "application/json",
-				},
-			}
-		);
-		return response.data.data;
-	};
 	
-	const { data: paymentText } = useQuery({
-		queryKey: ["paymentText", locale], 
-		queryFn: () => fetchPaymentText(locale),
-});
+	function fetchPaymentText(locale) {
+		fetch(`${CMS_URL}/api/payment-texts?&populate=*`, {
+			headers: {
+				Authorization: `Bearer ${API_KEY}`,
+				"Content-Type": "application/json",
+			},
+		})
+			.then((response) => response.json())
+			.then((res) => {
+				localStorage.removeItem("payment-text");
+				localStorage.setItem("payment-text", JSON.stringify(res.data));
+				setPaymentText(res.data);
+			})
+			.catch((err) => {
+				if (err) {
+					let cachedata = localStorage.getItem("payment-text")
+					setPaymentText(JSON.parse(cachedata))
+				}
+			})
+	}
 
 	useEffect(() => {
 		let temp = totalAmount - paid;
@@ -93,6 +97,7 @@ export default function PaymentPage() {
 			dispatch(resetPayment());
 			dispatch(showPayment(false));
 		}
+		fetchPaymentText()
 	}, [cartItems]);
 
 	return (

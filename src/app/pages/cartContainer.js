@@ -46,13 +46,13 @@ export default function CartContainer(props) {
 			{cartText && (
 				<div className="cart-header">
 					<div className="cart-quantity">
-						{cartText[0] ? cartText[0].attributes.Name : "QUANTITY"}
+						{cartText[0] ? locale == 'en' ? cartText[0].attributes.Name :  cartText[0].attributes.localizations.data[0].attributes.Name : "QUANTITY"}
 					</div>
 					<div className="cart-item">
-						{cartText[1] ? cartText[1].attributes.Name : "ITEM"}
+						{cartText[1] ? locale == 'en' ? cartText[1].attributes.Name : cartText[1].attributes.localizations.data[0].attributes.Name : "ITEM"}
 					</div>
 					<div className="cart-amount">
-						{cartText[2] ? cartText[2].attributes.Name : "AMOUNT"}
+						{cartText[2] ? locale == 'en' ? cartText[2].attributes.Name : cartText[2].attributes.localizations.data[0].attributes.Name : "AMOUNT"}
 					</div>
 				</div>
 			)}
@@ -73,13 +73,13 @@ export default function CartContainer(props) {
 			{cartText && (
 				<div className="action-button-wrapper">
 					<button className="action-button" onClick={handleDeleteLast}>
-						{cartText[3] ? cartText[3].attributes.Name : "DELETE LAST"}
+						{cartText[3] ? locale == 'en' ? cartText[3].attributes.Name : cartText[3].attributes.localizations.data[0].attributes.Name : "DELETE LAST"}
 					</button>
 					<button className="action-button" onClick={handleClearAll}>
-						{cartText[4] ? cartText[4].attributes.Name : "CLEAR ALL"}
+						{cartText[4] ? locale == 'en' ? cartText[4].attributes.Name : cartText[4].attributes.localizations.data[0].attributes.Name : "CLEAR ALL"}
 					</button>
 					<button className="action-button" onClick={handleCheckout}>
-						{cartText[5] ? cartText[5].attributes.Name : "CHECK OUT"}
+						{cartText[5] ? locale == 'en' ? cartText[5].attributes.Name : cartText[5].attributes.localizations.data[0].attributes.Name : "CHECK OUT"}
 					</button>
 				</div>
 			)}
