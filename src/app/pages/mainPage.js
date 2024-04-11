@@ -8,17 +8,24 @@ import { useDispatch, useSelector } from "react-redux";
 import cart, { setLocale } from "../redux/slices/cart";
 import { useQuery, onlineManager, useQueryClient } from "@tanstack/react-query";
 import axios, { all } from "axios";
-import { setData, setImages } from "../redux/slices/product";
+import product, {
+	setData,
+	setImages,
+	setCartText,
+	setReceiptText,
+	setCategories,
+} from "../redux/slices/product";
 
 export default function MainPage(props) {
 	const { queryClient } = props;
+
 	const [lang, setLang] = useState(LOCALE_EN);
 	const [buttonText, setButtonText] = useState("Español");
 	const { locale } = useSelector((state) => state.cart);
 
-	const [isOnline, setIsOnline] = useState(true)
-
 	const dispatch = useDispatch();
+	const { data, images, categoriesData, cartTextData, receiptTextData } =
+		useSelector((state) => state.product);
 
 	const ChangeLanguage = () => {
 		if (lang == LOCALE_EN) setLang(LOCALE_ES);
@@ -31,105 +38,127 @@ export default function MainPage(props) {
 		dispatch(setLocale(lang));
 	}, [lang, buttonText]);
 
-	const [products, setProducts] = useState();
-	const [categories, setCategories] = useState();
-	const [receiptText, setReceiptText] = useState();
-	const [cartText, setCartText] = useState();
-
-
-	function fetchProducts(locale) {
-		fetch(`${CMS_URL}/api/products?&populate=*`, {
+	const fetchProducts = async ({signal}) => {
+		const response = await axios.get(`${CMS_URL}/api/products?&populate=*`, {
 			headers: {
 				Authorization: `Bearer ${API_KEY}`,
 				"Content-Type": "application/json",
 			},
-		})
-			.then((response) => response.json())
-			.then((res) => {
-				localStorage.removeItem("products");
-				localStorage.setItem("products", JSON.stringify(res.data));
-				setProducts(res.data);
-			})
-			.catch((err) => {
-				if (err) {
-					let cachedata = localStorage.getItem("products")
-					setProducts(JSON.parse(cachedata))
-				}
-			})
-	}
+			signal
+		});
 
-	function fetchCategories(locale) {
-		fetch(`${CMS_URL}/api/categories?&populate=*`, {
+		if (response) {
+			localStorage.removeItem("products");
+			localStorage.setItem("products", JSON.stringify(response.data.data));
+			return response.data.data;
+		} 
+	};
+
+	const fetchCategories = async ({signal}) => {
+		const response = await axios.get(`${CMS_URL}/api/categories?&populate=*`, {
 			headers: {
 				Authorization: `Bearer ${API_KEY}`,
 				"Content-Type": "application/json",
 			},
-		})
-			.then((response) => response.json())
-			.then((res) => {
-				localStorage.removeItem("categories");
-				localStorage.setItem("categories", JSON.stringify(res.data));
-				setCategories(res.data);
-			})
-			.catch((err) => {
-				if (err) {
-					let cachedata = localStorage.getItem("categories")
-					setCategories(JSON.parse(cachedata))
-				}
-			})
-	}
+			signal
+		});
 
-	function fetchCartText(locale) {
-		fetch(`${CMS_URL}/api/cart-texts?&populate=*`, {
+		if (response) {
+			localStorage.removeItem("categories");
+			localStorage.setItem("categories", JSON.stringify(response.data.data));
+			return response.data.data;
+		}
+	};
+
+	const fetchCartText = async ({signal}) => {
+		const response = await axios.get(`${CMS_URL}/api/cart-texts?&populate=*`, {
 			headers: {
 				Authorization: `Bearer ${API_KEY}`,
 				"Content-Type": "application/json",
 			},
-		})
-			.then((response) => response.json())
-			.then((res) => {
-				localStorage.removeItem("cart-text");
-				localStorage.setItem("cart-text", JSON.stringify(res.data));
-				setCartText(res.data);
-			})
-			.catch((err) => {
-				if (err) {
-					let cachedata = localStorage.getItem("cart-text")
-					setCartText(JSON.parse(cachedata))
-				}
-			})
-	}
+			signal
+		});
 
-	function fetchReceiptText(locale) {
-		fetch(`${CMS_URL}/api/receipt-texts?&populate=*`, {
-			headers: {
-				Authorization: `Bearer ${API_KEY}`,
-				"Content-Type": "application/json",
+		if (response) {
+			localStorage.removeItem("cartText");
+			localStorage.setItem("cartText", JSON.stringify(response.data.data));
+			return response.data.data;
+		} 
+	};
+
+	const fetchReceiptText = async ({signal}) => {
+		const response = await axios.get(
+			`${CMS_URL}/api/receipt-texts?&populate=*`,
+			{
+				headers: {
+					Authorization: `Bearer ${API_KEY}`,
+					"Content-Type": "application/json",
+				},
+				signal
 			},
-		})
-			.then((response) => response.json())
-			.then((res) => {
-				localStorage.removeItem("receipt-text");
-				localStorage.setItem("receipt-text", JSON.stringify(res.data));
-				setReceiptText(res.data);
-			})
-			.catch((err) => {
-				if (err) {
-					let cachedata = localStorage.getItem("receipt-text")
-					setReceiptText(JSON.parse(cachedata))
-				}
-			})
-	}
+			
+		);
+
+		if (response) {
+			localStorage.removeItem("receiptText");
+			localStorage.setItem("receiptText", JSON.stringify(response.data.data));
+			return response.data.data;
+		} 
+	};
+
+	const { data: products } = useQuery({
+		queryKey: ["products"],
+		queryFn: ({signal}) => fetchProducts({signal}),
+		initialData: () => {
+			const cachedData = queryClient.getQueryData("products");
+			if (cachedData) {
+				return cachedData;
+			}
+		},
+		refetchOnReconnect: "always",
+		refetchInterval: 2000,
+	});
+
+	const { data: receiptText } = useQuery({
+		queryKey: ["receiptText"],
+		queryFn: ({signal}) => fetchReceiptText({signal}),
+		initialData: () => {
+			const cachedData = queryClient.getQueryData("receiptText");
+			if (cachedData) {
+				return cachedData;
+			}
+		},
+		refetchOnReconnect: "always",
+		refetchInterval: 2000,
+	});
+
+	const { data: cartText } = useQuery({
+		queryKey: ["cartText"],
+		queryFn: ({signal}) => fetchCartText({signal}),
+		initialData: () => {
+			const cachedData = queryClient.getQueryData("cartText");
+			if (cachedData) {
+				return cachedData;
+			}
+		},
+		refetchOnReconnect: "always",
+		refetchInterval: 2000,
+	});
+
+	const { data: categories } = useQuery({
+		queryKey: ["categories"],
+		queryFn: ({signal}) => fetchCategories({signal}),
+		initialData: () => {
+			const cachedData = queryClient.getQueryData("categories");
+			if (cachedData) {
+				return cachedData;
+			}
+		},
+		refetchOnReconnect: "always",
+		refetchInterval: 2000,
+	});
 
 
-	useEffect(() => {
-		fetchProducts(locale);
-		fetchCategories(locale);
-		fetchCartText(locale);
-		fetchReceiptText(locale);
-	}, [locale]);
-
-	
 
 	return (
 		<div className="main-wrapper">
@@ -143,19 +172,11 @@ export default function MainPage(props) {
 				<div className="body">
 					<ProductContainer
 						locale={locale}
-						// products={locale == "es" ? productses : productsen}
-						// categories={locale == "en" ? categoriesen : categorieses}
-						products={products}
-						categories={categories}
+						products={products ? products : JSON.parse(localStorage.getItem("products"))}
+						categories={categories ? categories : JSON.parse(localStorage.getItem("categories"))}
 					/>
-					<CartContainer
-						// cartText={locale == "es" ? cartTextes : cartTexten}
-						cartText={cartText}
-					/>
-					<ReceiptContainer
-						receiptText={receiptText}
-						// receiptText={locale == "es" ? receiptTextes : receiptTexten}
-					/>
+					<CartContainer cartText={cartText ? cartText : JSON.parse(localStorage.getItem("cartText"))} />
+					<ReceiptContainer receiptText={receiptText ? receiptText : JSON.parse(localStorage.getItem("receiptText"))} />
 				</div>
 			</div>
 		</div>

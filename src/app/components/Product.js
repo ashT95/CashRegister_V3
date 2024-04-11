@@ -6,17 +6,18 @@ import axios, { all } from "axios";
 import { setData, setImages } from "../redux/slices/product";
 
 export default function Product(props) {
-	const { id, name, image, price, barcode, category } = props;
+	const { id, name, image, price, barcode, category, ESname } = props;
+	const { locale } = useSelector((state) => state.cart);
 	const dispatch = useDispatch();
+
+	const [Img, setImg] = useState();
+
+	const { images } = useSelector((state) => state.product);
 
 	const add = () => {
 		const item = { ...props };
 		if (item) dispatch(addToCart(item));
 	};
-
-	const {images, data} = useSelector((state) => state.product)
-	
-	console.log(images)
 
 	const fetchImage = async (url) => {
 		return await new Promise((resolve, reject) => {
@@ -29,42 +30,35 @@ export default function Product(props) {
 				.then((response) => response.blob()) // sending the blob response to the next then
 				.then((blob) => {
 					const objectUrl = window.URL.createObjectURL(blob);
-					localStorage.removeItem(`img-${id}`)
-					localStorage.setItem(`img-${id}`, objectUrl)
-					resolve(objectUrl);
+					const reader = new FileReader();
+					reader.readAsDataURL(blob);
+
+					reader.onloadend = () => {
+						setImg(reader.result);
+						localStorage.removeItem(`img-${id}`);
+						localStorage.setItem(`img-${id}`, reader.result);
+						// console.log(reader.result);
+						return reader.result;
+					};
+
+					//return resolve(reader.result);
 				}) // resolved the promise with the objectUrl
 				.catch((err) => {
-					let cachedImg = localStorage.getItem(`img-${id}`)
-					resolve(cachedImg)
-					//  reject(err);
+					// reject(err);
 				}); // if there are any errors reject them
 		});
 	};
 
-
-
 	useEffect(() => {
-		const item = { ...props };
-		if (item) dispatch(setData(item));
 		if (id && image) {
-			try {
-				fetchImage(image).then((res) => {
-					localStorage.removeItem(`img-${id}`)
-					localStorage.setItem(`img-${id}`, res)
-					dispatch(setImages({ id: id, blob: res }));
-				});
-			} catch (error) {
-				let cachedImg = localStorage.getItem(`img-${id}`)
-				dispatch(setImages({ id: id, blob: cachedImg }))
-			}
+			fetchImage(image);
 		}
 	}, [id, image]);
 
-
 	return (
 		<button className="product-card" onClick={() => add()}>
-			<img src={images[id]} id={`product-img`} />
-			<p className="product-name">{name}</p>
+			<img src={Img ? Img : localStorage.getItem(`img-${id}`)} id={`product-img`} />
+			<p className="product-name">{locale == "en" ? name : ESname}</p>
 		</button>
 	);
 }

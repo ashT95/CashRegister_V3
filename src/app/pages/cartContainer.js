@@ -60,7 +60,7 @@ export default function CartContainer(props) {
 			<div className="cart-content">
 				<div className="cart-added-items">
 					{cartItems.map((item) => {
-						return <CartItem key={item.id} {...item} />;
+						return <CartItem key={item.id}  {...item} />;
 					})}
 				</div>
 			</div>

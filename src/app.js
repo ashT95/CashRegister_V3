@@ -11,8 +11,8 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
 
 const queryClient = new QueryClient({
 	defaultOptions: {
-		cacheTime: Infinity,
-		staleTime: Infinity,
+		cacheTime: 5000,
+		staleTime: 2000,
 	},
 });
 
@@ -26,6 +26,7 @@ export default function App() {
 			<PersistQueryClientProvider
 				client={queryClient}
 				persistOptions={{ persister }}
+				onSuccess={() => queryClient.invalidateQueries()}
 			>
 				<Provider store={store}>
 					<MainPage queryClient={queryClient} />

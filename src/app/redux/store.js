@@ -1,4 +1,8 @@
-import { configureStore, applyMiddleware } from "@reduxjs/toolkit";
+import {
+	configureStore,
+	applyMiddleware,
+	combineReducers,
+} from "@reduxjs/toolkit";
 import cartReducer from "./slices/cart";
 import paymentReducer from "./slices/payment";
 import productReducer from "./slices/product";
@@ -7,6 +11,7 @@ import {
 	createStateSyncMiddleware,
 	initMessageListener,
 } from "redux-state-sync";
+
 
 const store = configureStore({
 	reducer: {

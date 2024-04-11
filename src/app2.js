@@ -9,10 +9,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 
-const queryClient = new QueryClient({
+const queryClient2 = new QueryClient({
 	defaultOptions: {
-		cacheTime: Infinity,
-		staleTime: Infinity,
+		cacheTime: 1000 * 60 * 60 * 24,
 	},
 });
 
@@ -23,9 +22,9 @@ const persister = createSyncStoragePersister({
 export default function App2() {
 	return (
 		<div>
-			<PersistQueryClientProvider client={queryClient} persistOptions={{persister}}>
+			<PersistQueryClientProvider client={queryClient2} persistOptions={{persister}}>
 				<Provider store={store}>
-					<PaymentPage />
+					<PaymentPage queryClient={queryClient2} />
 				</Provider>
 			</PersistQueryClientProvider>
 		</div>

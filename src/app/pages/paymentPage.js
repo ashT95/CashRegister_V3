@@ -20,9 +20,11 @@ import {
 } from "../redux/slices/payment";
 import axios, { all } from "axios";
 import { API_KEY, CMS_URL, LOCALE_EN } from "../utils/constants";
-import {useQuery } from '@tanstack/react-query';
+import {useQuery, useQueryClient } from '@tanstack/react-query';
 
-export default function PaymentPage() {
+export default function PaymentPage(props) {
+	const { queryClient } = props;
+	
 	const { cartItems, quantity, totalAmount, checkout, locale } = useSelector(
 		(state) => state.cart
 	);
@@ -30,7 +32,6 @@ export default function PaymentPage() {
 
 	const [remainder, setRemainder] = useState(0);
 	const [change, setChange] = useState(0);
-	const [paymentText, setPaymentText] = useState()
 	const dispatch = useDispatch();
 
 	const bills = [
@@ -51,27 +52,44 @@ export default function PaymentPage() {
 		dispatch(addPaymentItem(value));
 	};
 
-	
-	function fetchPaymentText(locale) {
-		fetch(`${CMS_URL}/api/payment-texts?&populate=*`, {
-			headers: {
-				Authorization: `Bearer ${API_KEY}`,
-				"Content-Type": "application/json",
+	const [paymentText, setPaymentText] = useState()
+
+	const fetchPaymentText = async ({signal}) => {
+		const response = await axios.get(
+			`${CMS_URL}/api/payment-texts?&populate=*`,
+			{
+				headers: {
+					Authorization: `Bearer ${API_KEY}`,
+					"Content-Type": "application/json",
+				},
+				signal
 			},
-		})
-			.then((response) => response.json())
-			.then((res) => {
-				localStorage.removeItem("payment-text");
-				localStorage.setItem("payment-text", JSON.stringify(res.data));
-				setPaymentText(res.data);
-			})
-			.catch((err) => {
-				if (err) {
-					let cachedata = localStorage.getItem("payment-text")
-					setPaymentText(JSON.parse(cachedata))
-				}
-			})
-	}
+			
+		);
+
+		if (response) {
+			localStorage.removeItem("paymentText");
+			localStorage.setItem("paymentText", JSON.stringify(response.data.data));
+			return response.data.data;
+		} 
+	};
+
+	const { data: payment } = useQuery({
+		queryKey: ["paymentText"],
+		queryFn: ({signal}) => fetchPaymentText({signal}),
+		initialData: () => {
+			const cachedData = queryClient.getQueryData("paymentText");
+			if (cachedData) {
+				return cachedData;
+			}
+		},
+	});
+
+	useEffect(() => {
+		if (payment) setPaymentText(payment)
+		if (!payment) setPaymentText(JSON.parse(localStorage.getItem("paymentText")))
+	}, [payment])
+
 
 	useEffect(() => {
 		let temp = totalAmount - paid;
@@ -97,7 +115,7 @@ export default function PaymentPage() {
 			dispatch(resetPayment());
 			dispatch(showPayment(false));
 		}
-		fetchPaymentText()
+		
 	}, [cartItems]);
 
 	return (
@@ -105,7 +123,7 @@ export default function PaymentPage() {
 			<div className="payment-bg">
 				<img src={PayBG} id="paybg-img" />
 			</div>
-			{show && (
+			{show && paymentText &&(
 				<div
 					className="pay-content"
 					style={{ display: checkout ? "flex" : "none" }}
@@ -117,12 +135,14 @@ export default function PaymentPage() {
 								<p id="pay-amount-total">Total: </p>
 								<p id="pay-amount-paid">
 									{paymentText[0]
-										? paymentText[0].attributes.Name + ":"
+										? locale == LOCALE_EN ? paymentText[0].attributes.Name + ":" 
+										: paymentText[0].attributes.localizations.data[0].attributes.Name + ":"
 										: "Amount Paid:"}{" "}
 								</p>
 								<p id="pay-amount-to-go">
 									{paymentText[1]
-										? paymentText[1].attributes.Name + ":"
+										? locale == LOCALE_EN ? paymentText[1].attributes.Name + ":" 
+										: paymentText[1].attributes.localizations.data[0].attributes.Name + ":"
 										: "Amount to go:"}{" "}
 								</p>
 							</div>
@@ -149,7 +169,8 @@ export default function PaymentPage() {
 						>
 							<h6>
 								{paymentText[2]
-									? paymentText[2].attributes.Name
+									? locale == LOCALE_EN ? paymentText[2].attributes.Name + ":" 
+									: paymentText[2].attributes.localizations.data[0].attributes.Name + ":"
 									: "TOUCH BILLS AND COINS TO PAY:"}{" "}
 							</h6>
 						</div>
@@ -169,7 +190,8 @@ export default function PaymentPage() {
 							style={{ display: completed ? "block" : "none" }}
 						>
 							{paymentText[3]
-								? paymentText[3].attributes.Name + ":"
+								? locale == LOCALE_EN ? paymentText[3].attributes.Name + ":" 
+								: paymentText[3].attributes.localizations.data[0].attributes.Name + ":"
 								: "Change:"}
 						</p>
 						<p
