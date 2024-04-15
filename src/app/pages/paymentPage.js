@@ -83,6 +83,8 @@ export default function PaymentPage(props) {
 				return cachedData;
 			}
 		},
+		refetchOnReconnect: "always",
+		refetchInterval: 1000 * 60 * 60 * 24, // refetch every 24 hours
 	});
 
 	useEffect(() => {

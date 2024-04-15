@@ -8,13 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import cart, { setLocale } from "../redux/slices/cart";
 import { useQuery, onlineManager, useQueryClient } from "@tanstack/react-query";
 import axios, { all } from "axios";
-import product, {
-	setData,
-	setImages,
-	setCartText,
-	setReceiptText,
-	setCategories,
-} from "../redux/slices/product";
+
 
 export default function MainPage(props) {
 	const { queryClient } = props;
@@ -24,8 +18,6 @@ export default function MainPage(props) {
 	const { locale } = useSelector((state) => state.cart);
 
 	const dispatch = useDispatch();
-	const { data, images, categoriesData, cartTextData, receiptTextData } =
-		useSelector((state) => state.product);
 
 	const ChangeLanguage = () => {
 		if (lang == LOCALE_EN) setLang(LOCALE_ES);
@@ -38,6 +30,8 @@ export default function MainPage(props) {
 		dispatch(setLocale(lang));
 	}, [lang, buttonText]);
 
+
+	// fetching data through react-query and storing in local storage
 	const fetchProducts = async ({signal}) => {
 		const response = await axios.get(`${CMS_URL}/api/products?&populate=*`, {
 			headers: {
@@ -116,7 +110,7 @@ export default function MainPage(props) {
 			}
 		},
 		refetchOnReconnect: "always",
-		refetchInterval: 2000,
+		refetchInterval: 1000 * 60 * 60 * 24, // refetch every 24 hours
 	});
 
 	const { data: receiptText } = useQuery({
@@ -129,7 +123,7 @@ export default function MainPage(props) {
 			}
 		},
 		refetchOnReconnect: "always",
-		refetchInterval: 2000,
+		refetchInterval: 1000 * 60 * 60 * 24, // refetch every 24 hours
 	});
 
 	const { data: cartText } = useQuery({
@@ -142,7 +136,7 @@ export default function MainPage(props) {
 			}
 		},
 		refetchOnReconnect: "always",
-		refetchInterval: 2000,
+		refetchInterval: 1000 * 60 * 60 * 24, // refetch every 24 hours
 	});
 
 	const { data: categories } = useQuery({
@@ -155,8 +149,11 @@ export default function MainPage(props) {
 			}
 		},
 		refetchOnReconnect: "always",
-		refetchInterval: 2000,
+		refetchInterval: 1000 * 60 * 60 * 24, // refetch every 24 hours
 	});
+
+	let code = ''
+
 
 
 

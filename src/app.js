@@ -11,14 +11,14 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
 
 const queryClient = new QueryClient({
 	defaultOptions: {
-		cacheTime: 5000,
-		staleTime: 2000,
+		cacheTime: 1000 * 60 * 60 * 24,
 	},
 });
 
 const persister = createSyncStoragePersister({
 	storage: window.localStorage,
 });
+
 
 export default function App() {
 	return (
