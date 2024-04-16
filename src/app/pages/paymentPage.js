@@ -21,7 +21,6 @@ import {
 import axios, { all } from "axios";
 import { API_KEY, CMS_URL, LOCALE_EN } from "../utils/constants";
 import {useQuery, useQueryClient } from '@tanstack/react-query';
-import {addToCart} from "../redux/slices/cart";
 
 export default function PaymentPage(props) {
 	const { queryClient } = props;
