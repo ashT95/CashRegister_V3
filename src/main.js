@@ -12,9 +12,10 @@ const createWindow = () => {
 	mainWindow = new BrowserWindow({
 		x: 0,
 		y: 0,
-		width: 1024,
+		width: 2048,
 		height: 768,
-    	//frame: false,
+        frame: false,
+    	
 		webPreferences: {
 			preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
 		},
@@ -22,6 +23,7 @@ const createWindow = () => {
 
 	// and load the index.html of the app.
 	mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+	//mainWindow.setBounds({width: 2048})
 	//mainWindow.setFullScreen(true);
 
 	// Open the DevTools.
@@ -29,17 +31,16 @@ const createWindow = () => {
 
 	mainWindow.on("close", () => {
 		mainWindow = null;
-		mainWindow2 = null;
 		app.quit();
 	});
-
-
-	mainWindow2 = new BrowserWindow({
-		x: 1024,
+	
+	
+	/*	mainWindow2 = new BrowserWindow({
+		x: 0,
 		y: 0,
 		width: 1024,
-		height: 600,
-    	//frame: false,
+		height: 768,
+    	frame: false,
 		webPreferences: {
 			preload: MAIN_WINDOW2_PRELOAD_WEBPACK_ENTRY,
 		},
@@ -48,14 +49,15 @@ const createWindow = () => {
 	// and load the index.html of the app.
 	mainWindow2.loadURL(MAIN_WINDOW2_WEBPACK_ENTRY);
 	//mainWindow2.setFullScreen(true);
-	// Open the DevTools.
-	//mainWindow2.webContents.openDevTools();
 
-  mainWindow2.on("close", () => {
-		mainWindow = null;
+	// Open the DevTools.
+	// mainWindow2.webContents.openDevTools();
+
+	mainWindow2.on("close", () => {
 		mainWindow2 = null;
 		app.quit();
 	});
+*/
 };
 
 // This method will be called when Electron has finished

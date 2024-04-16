@@ -18,14 +18,20 @@ const cartSlice = createSlice({
 			if (!doesItemExist) {
 				state.cartItems = [...state.cartItems, { ...payload, quantity: 1 }];
 			} else {
-				state.cartItems = state.cartItems.map((item) => {
+				let i;
+				let q;
+				state.cartItems.map((item, index) => {
 					if (item.id === payload.id) {
-						return { ...item, quantity: item.quantity + 1 };
-						// item.quantity += 1
-					} else {
-						return item;
-					}
+						i = index
+						item.quantity += 1
+						q = item.quantity
+					} 
 				});
+
+				state.cartItems.splice(i, 1)
+				state.cartItems = [...state.cartItems, {...payload, quantity: q}]
+		
+				
 			}
 
 			state.quantity++;
@@ -38,18 +44,6 @@ const cartSlice = createSlice({
 			);
 			state.quantity -= payload.quantity;
 			state.totalAmount -= payload.price * payload.quantity;
-		},
-
-		addItemQuantity: (state, { payload }) => {
-			state.cartItems = state.cartItems.map((item) => {
-				if (item.id === payload.id) {
-					return { ...item, quantity: item.quantity + 1 };
-				} else {
-					return item;
-				}
-			});
-			state.quantity++;
-			state.totalAmount += payload.price;
 		},
 
 		subtractItemQuantity: (state, { payload }) => {

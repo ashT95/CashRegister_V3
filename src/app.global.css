@@ -1,13 +1,19 @@
 .wrapper {
-	display: flex;
-	flex-direction: row;
-	justify-content:flex-start;
+display: flex;
+	width: 2048px;
+	min-width: 2048px;
+	height: 768px;
+	max-height: 768px;
 }
 
+
 .main-wrapper {
-	position: absolute;
+	position: relative;	
+	display: flex;
+	flex-direction: row;
 	width: 1024px;
 	height: 768px;
+	display: flex;
 }
 
 .main {
@@ -61,7 +67,8 @@
 	justify-items: center;
 	box-shadow:  -5px 5px 5px -5px grey;
 	color: grey;
-	overflow-y: scroll;	
+	overflow-y: scroll;
+	scroll-behavior: smooth;	
 }
 
 
@@ -129,7 +136,8 @@
 }
 
 .product-card {
-	height: 100px;
+	display: flex;
+	max-height: 115px;
 	width: 130px;
 	border-radius: 5%;
 	border: 1.5px solid gainsboro;
@@ -139,15 +147,15 @@
 	box-shadow: -4px 4px 4px gainsboro;
 	cursor: pointer;
 	background-color: white;
-	
+	align-items: center;
+	line-height: 13px;
 }
 
 .product-name {
-	font-size: small;
+	font-size: 13px;
 	align-self: center;
 	text-align: center;
-	justify-self: center;
-	padding: 8px;
+	padding: 10px;
 	color: #f06;
 	font-weight: 600;
 }
@@ -155,12 +163,13 @@
 #product-img {
 	align-self: center;
 	text-align: center;
-	height: 55px;
+	height: 60px;
 }
 
 .cart-container {
 	width: 384px;
 	transform: translate(600px, -385px);
+	
 }
 
 .cart-header {
@@ -184,6 +193,7 @@
 .cart-item {
 	margin-top: 8px;
 	margin-left: 30px;
+	
 }
 
 .cart-amount {
@@ -214,14 +224,16 @@
 .total-amount {
 	position: absolute;
 	margin-top: 6px;
-	margin-left: 250px;
+	margin-left: 225px;
 	font-size: 15px;
 	color: #23ba0d;
 	font-weight: 600;
 }
 
 #total-price {
+
 	color: grey;
+	text-align: left;
 }
 
 .cart-added-items {
@@ -233,18 +245,36 @@
 	color: grey;
 	font-size: 15px;
 	display: flex;
+	font-weight: 450;
+	animation: 1s highlit;
+	width: 320px;
+	height: 20px;
+	margin: 5px;
+	margin-bottom: 20px;
+}
+
+@keyframes highlit {
+0% {
+	background-color: white;
+}
+50% {
+	background-color: yellow;
+}
+100% {
+	background-color: white;
+}
 }
 
 #cart-item-name {
 	position: absolute;
-	margin-left: 70px;
+	margin-left: 90px;
 	width: 200px;
 }
 
 #cart-item-price {
 	position: absolute;
-	margin-left: 290px;
-	text-align: right;
+	margin-left: 265px;
+	text-align: left;
 	width: 50px;
 }
 
@@ -277,16 +307,18 @@
 }
 
 .payment-wrapper {
-	height: 600px;
-	align-self: center;
+ position: relative;
+	display: flex;
+	flex-direction: row;
 }
 
 .payment-bg {
 	width: 1024px;
 	height: 600px;
+	position: relative;
 	display: flex;
 	flex-direction: row;
-	position: absolute;
+	
 }
 
 .pay-content {
@@ -429,7 +461,7 @@
 	top: -8px;
 	width: 100%;
 	height: 100%;
-    padding: 30px;
+  padding: 30px;
 	align-items: center;
 	display: flex;
 	flex-direction: column;
@@ -529,7 +561,15 @@
 	font-size: x-large;
 	font-weight: 650;
 	transform: translate(0px, 570px);
-	color:#23ba0d;
+	color:#ff2626;
+}
+
+#receipt-waiting-done {
+	position: absolute;
+	font-size: x-large;
+	font-weight: 650;
+	transform: translate(0px, 570px);
+	color:#39b54a;
 }
 
 
